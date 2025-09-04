@@ -1,10 +1,15 @@
-import type { Product } from "../data/Products";
+import type { Product } from "../data/products";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../store/cartSlice";
+import type { AppDispatch } from "../store/store";
 
 interface Props {
   product: Product;
 }
 
 const ProductCard = ({ product }: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <div
       style={{
@@ -23,6 +28,7 @@ const ProductCard = ({ product }: Props) => {
       <h3>{product.name}</h3>
       <p>{product.price} ₺</p>
       <button
+        onClick={() => dispatch(addToCart(product))}
         style={{
           background: "#333",
           color: "white",
