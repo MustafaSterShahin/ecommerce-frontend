@@ -1,7 +1,20 @@
-import { useParams } from "react-router-dom";
+import ProductCard from "../components/ProductCard";
+import { products } from "../data/products";
 
-function ProductDetail() {
-  const { id } = useParams();
-  return <h1>Product Detail - {id}</h1>;
+interface Props {
+  limit?: number;
 }
-export default ProductDetail;
+
+const ProductList: React.FC<Props> = ({ limit }) => {
+  const displayedProducts = limit ? products.slice(0, limit) : products;
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {displayedProducts.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
+};
+
+export default ProductList;

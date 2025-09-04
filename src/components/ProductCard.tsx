@@ -11,32 +11,17 @@ const ProductCard = ({ product }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   return (
-    <div
-      style={{
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        padding: "16px",
-        textAlign: "center",
-        width: "200px",
-      }}
-    >
+    <div className="bg-white shadow-md rounded-xl p-4 w-60 hover:scale-105 transition-transform">
       <img
         src={product.image}
         alt={product.name}
-        style={{ width: "100%", height: "150px", objectFit: "cover" }}
+        className="w-48 h-48 object-cover rounded-lg"
       />
-      <h3>{product.name}</h3>
-      <p>{product.price} ₺</p>
+      <h3 className="mt-2 font-semibold text-lg">{product.name}</h3>
+      <p className="text-gray-600">{product.price} ₺</p>
       <button
         onClick={() => dispatch(addToCart(product))}
-        style={{
-          background: "#333",
-          color: "white",
-          border: "none",
-          padding: "8px 12px",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
+        className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
       >
         Add to Cart
       </button>
