@@ -10,18 +10,18 @@ export const products: Product[] = [
     id: 1,
     name: "Wireless Mouse",
     price: 199,
-    image: "https://via.placeholder.com/200x200?text=Mouse",
+    image: "assets/images/mouse.jpg",
   },
   {
     id: 2,
     name: "Mechanical Keyboard",
     price: 499,
-    image: "https://via.placeholder.com/200x200?text=Keyboard",
+    image: "assets/images/keyboard.jpg",
   },
   {
     id: 3,
     name: "Gaming Headset",
     price: 299,
-    image: "https://via.placeholder.com/200x200?text=Headset",
+    image: "assets/images/headset.jpg",
   },
 ];
