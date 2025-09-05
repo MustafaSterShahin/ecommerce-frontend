@@ -1,29 +1,43 @@
-import type { Product } from "../data/products";
-import { Link } from "react-router-dom";
+import React from "react";
 
-interface Props {
-  products: Product[];
+interface Product {
+  productId: number;
+  productName: string;
+  unitPrice: number;
+  unitsInStock: number;
+  categoryId: number;
 }
 
-const ProductList: React.FC<Props> = ({ products }) => {
+interface Category {
+  categoryId: number;
+  categoryName: string;
+}
+
+interface ProductListProps {
+  products: Product[];
+  categories: Category[];
+}
+
+const ProductList: React.FC<ProductListProps> = ({ products, categories }) => {
+  const getCategoryName = (categoryId: number) => {
+    const category = categories.find((c) => c.categoryId === categoryId);
+    return category?.categoryName ?? "No Name";
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
-      {products.map((product) => (
-        <Link
-          to={`/products/${product.id}`}
-          key={product.id}
-          className="bg-white rounded-xl shadow-md p-4 hover:scale-105 transition-transform"
+    <ul className="space-y-2">
+      {products.map((p) => (
+        <li
+          key={p.productId}
+          className="flex justify-between p-4 border rounded bg-white"
         >
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-48 h-48 object-cover rounded-lg mb-2"
-          />
-          <h3 className="text-lg font-semibold">{product.name}</h3>
-          <p className="text-gray-600">{product.price} ₺</p>
-        </Link>
+          <div>
+            <p className="font-semibold">{p.productName}</p>
+            <p>Price: {p.unitPrice} | Stock: {p.unitsInStock}</p>
+          </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 
