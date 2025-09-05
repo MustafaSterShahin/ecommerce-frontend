@@ -1,5 +1,6 @@
 import ProductList from "../components/ProductList";
 import PromoSlider from "../components/PromoSlider";
+import { products } from "../data/products"; // <-- Bunu ekle
 
 const Products: React.FC = () => {
   return (
@@ -26,10 +27,13 @@ const Products: React.FC = () => {
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col gap-6">
         <PromoSlider />
+
         <h2 className="text-2xl font-bold mb-4">All Products</h2>
-        <ProductList />
+
+        {/* Burada products props olarak gönderiliyor */}
+        <ProductList products={products} />
       </div>
     </div>
   );
