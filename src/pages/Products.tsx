@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
 import api from "../api";
-
-interface Product {
-  productId: number;
-  productName: string;
-  unitPrice: number;
-  unitsInStock: number;
-  categoryId: number;
-  supplier?: string; // Supplier bilgisi
-}
+import type { ProductDto } from "../types";
 
 interface Category {
   categoryId: number;
@@ -17,7 +9,7 @@ interface Category {
 }
 
 const Products: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductDto[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [minPrice, setMinPrice] = useState<number | "">("");
@@ -29,7 +21,7 @@ const Products: React.FC = () => {
     try {
       const res = await api.get("/products");
       const data = Array.isArray(res.data.$values) ? res.data.$values : res.data;
-      setProducts(data);
+      setProducts(data); // Artık ProductDto tipi
     } catch (err) {
       console.error("Failed to fetch products:", err);
       setProducts([]);
@@ -38,7 +30,7 @@ const Products: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await api.get("/category");
+      const res = await api.get("/products/categories");
       const data = Array.isArray(res.data.$values) ? res.data.$values : res.data;
       setCategories(data);
     } catch (err) {
@@ -68,7 +60,6 @@ const Products: React.FC = () => {
 
   return (
     <div className="min-h-screen flex bg-gray-50 p-4 md:p-6">
-      {/* Sidebar / Filter */}
       <aside
         className={`w-64 bg-white p-4 rounded-xl shadow-md mr-6 transform transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:static top-0 left-0 h-full z-50`}
@@ -80,7 +71,7 @@ const Products: React.FC = () => {
           </button>
         </div>
 
-        {/* Search bar */}
+        {/* Search */}
         <div className="mb-4">
           <h4 className="font-semibold mb-2">Search</h4>
           <input
@@ -92,6 +83,7 @@ const Products: React.FC = () => {
           />
         </div>
 
+        {/* Categories */}
         <div className="mb-4">
           <h4 className="font-semibold mb-2">Category</h4>
           <ul className="space-y-1">
@@ -116,6 +108,7 @@ const Products: React.FC = () => {
           </ul>
         </div>
 
+        {/* Price */}
         <div className="mb-4">
           <h4 className="font-semibold mb-2">Price Range</h4>
           <div className="flex flex-col gap-2">
@@ -141,7 +134,6 @@ const Products: React.FC = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col gap-6">
         <div className="flex justify-between items-center mb-4 md:hidden">
           <h2 className="text-2xl font-bold">All Products</h2>
@@ -155,10 +147,7 @@ const Products: React.FC = () => {
 
         <h2 className="text-2xl font-bold mb-4 hidden md:block">All Products</h2>
 
-        <ProductList
-          products={filteredProducts}
-          categories={categories}
-        />
+        <ProductList products={filteredProducts} categories={categories} />
       </div>
     </div>
   );

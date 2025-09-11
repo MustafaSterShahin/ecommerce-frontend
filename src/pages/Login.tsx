@@ -29,7 +29,7 @@ const Login = () => {
       }
 
       const data = await res.json();
-      login(data.token, formData.username); // Context’e kaydet
+      login(data.token, formData.username, data.role);
       navigate("/");
     } catch (err: any) {
       setError(err.message);

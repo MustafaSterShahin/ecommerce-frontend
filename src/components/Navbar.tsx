@@ -8,7 +8,6 @@ const Navbar = () => {
   const { isLoggedIn, username, logout } = useContext(AuthContext);
   const [role, setRole] = useState("");
 
-  // JWT'den rolü almak için
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -34,8 +33,15 @@ const Navbar = () => {
       <div className="space-x-6 flex-1 flex justify-center">
         <Link to="/" className="hover:text-gray-200 font-medium">Home</Link>
         <Link to="/products" className="hover:text-gray-200 font-medium">Products</Link>
+
         {isLoggedIn && role === "Admin" && (
           <Link to="/admin" className="hover:text-gray-200 font-medium">Admin Panel</Link>
+        )}
+
+        {isLoggedIn && role === "Supplier" && (
+          <Link to="/supplier" className="hover:text-gray-200 font-medium">
+            Supplier Panel
+          </Link>
         )}
       </div>
 

@@ -4,11 +4,13 @@ import type { ProductDto } from "../types";
 const AdminProducts = () => {
   const [products, setProducts] = useState<ProductDto[]>([]);
   const [newProduct, setNewProduct] = useState<Omit<ProductDto, "productId">>({
-    productName: "",
-    unitPrice: 0,
-    unitsInStock: 0,
+    productName: "Test",
+    unitPrice: 100,
+    unitsInStock: 10,
     categoryId: 1,
-    imageUrl: "",
+    imageUrl: "url",
+    details: "Test product", 
+    supplierID: 1
   });
   const [file, setFile] = useState<File | null>(null);
 
@@ -76,11 +78,13 @@ const AdminProducts = () => {
 
       if (res.ok) {
         setNewProduct({
-          productName: "",
-          unitPrice: 0,
-          unitsInStock: 0,
+          productName: "Test",
+          unitPrice: 100,
+          unitsInStock: 10,
           categoryId: 1,
-          imageUrl: "",
+          imageUrl: "url",
+          details: "Test product",
+          supplierID: 1
         });
         setFile(null);
         fetchProducts();

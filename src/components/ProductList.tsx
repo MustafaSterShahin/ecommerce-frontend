@@ -1,22 +1,6 @@
 import React from "react";
-
-interface Product {
-  productId: number;
-  productName: string;
-  unitPrice: number;
-  unitsInStock: number;
-  categoryId: number;
-}
-
-interface Category {
-  categoryId: number;
-  categoryName: string;
-}
-
-interface ProductListProps {
-  products: Product[];
-  categories: Category[];
-}
+import { Link } from "react-router-dom";
+import type { ProductListProps } from "../types";
 
 const ProductList: React.FC<ProductListProps> = ({ products, categories }) => {
   const getCategoryName = (categoryId: number) => {
@@ -29,12 +13,27 @@ const ProductList: React.FC<ProductListProps> = ({ products, categories }) => {
       {products.map((p) => (
         <li
           key={p.productId}
-          className="flex justify-between p-4 border rounded bg-white"
+          className="flex justify-between items-center p-4 border rounded bg-white"
         >
           <div>
-            <p className="font-semibold">{p.productName}</p>
-            <p>Price: {p.unitPrice} | Stock: {p.unitsInStock}</p>
+            <Link
+              to={`/products/${p.productId}`}
+              className="font-semibold text-blue-600 hover:underline"
+            >
+              {p.productName}
+            </Link>
+            <p>
+              Price: {p.unitPrice} ₺ | Stock: {p.unitsInStock} | Category:{" "}
+              {getCategoryName(p.categoryId)}
+            </p>
           </div>
+          {p.imageUrl && (
+            <img
+              src={p.imageUrl}
+              alt={p.productName}
+              className="w-16 h-16 object-cover rounded"
+            />
+          )}
         </li>
       ))}
     </ul>

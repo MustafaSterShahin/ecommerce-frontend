@@ -1,22 +1,31 @@
 import React, { useState } from "react";
 import api from "../api";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const res = await api.post("/auth/login", { username, password });
-      localStorage.setItem("token", res.data.token);
-      alert("Login successful!");
-      setError("");
-    } catch (err) {
-      setError("Invalid credentials");
-    }
-  };
+  const authContext = useContext(AuthContext);
+
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const res = await api.post("/auth/login", { username, password });
+
+    authContext.login(res.data.token, username, res.data.role);
+
+    alert("Login successful!");
+    setError("");
+  } catch (err: any) {
+    setError("Invalid credentials");
+  }
+};
+
+
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

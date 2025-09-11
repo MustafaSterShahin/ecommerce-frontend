@@ -1,34 +1,55 @@
-import { useParams } from "react-router-dom";
-import { products, type Product } from "../data/products";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../store/cartSlice";
-import type { AppDispatch } from "../store/store";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import api from "../api";
+import type { ProductDto } from "../types";
+import { AuthContext } from "../context/AuthContext";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const product: Product | undefined = products.find(p => p.id === Number(id));
-  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { role, token } = useContext(AuthContext);
+  const [product, setProduct] = useState<ProductDto | null>(null);
 
-  if (!product) return <div className="p-6">Product not found</div>;
+  useEffect(() => {
+    if (!id) return;
+    api.get(`/products/${id}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} })
+      .then(res => setProduct(res.data))
+      .catch(err => console.error(err));
+  }, [id, token]);
+
+  const handleDelete = async () => {
+    if (!product || !token) return;
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+    try {
+      const res = await api.delete(`/products/${product.productId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.status || res.status !== 200) throw new Error("Delete failed");
+      alert("Product deleted!");
+      navigate("/supplier-panel");
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting product");
+    }
+  };
+
+  if (!product) return <p className="p-6">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-64 h-64 object-cover rounded-lg mb-4"
-      />
-      <h2 className="text-2xl font-bold">{product.name}</h2>
-      <p className="text-gray-700 mt-2">{product.price} ₺</p>
-      <p className="text-gray-600 mt-4">{product.description}</p>
+    <div className="p-6 max-w-lg mx-auto bg-white shadow-md rounded">
+      {product.imageUrl && <img src={product.imageUrl} alt={product.productName} className="w-full h-64 object-cover mb-4 rounded" />}
+      <h2 className="text-2xl font-bold">{product.productName}</h2>
+      <p className="mt-2">Price: {product.unitPrice} ₺</p>
+      <p>Stock: {product.unitsInStock}</p>
+      <p className="mt-2">{product.details}</p>
 
-      
-      <button
-        onClick={() => dispatch(addToCart(product))}
-        className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Add to Cart
-      </button>
+      {role === "Supplier" && (
+        <div className="mt-4 flex gap-2">
+          <button onClick={() => navigate(`/edit-product/${product.productId}`)} className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Edit</button>
+          <button onClick={handleDelete} className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Delete</button>
+        </div>
+      )}
     </div>
   );
 };

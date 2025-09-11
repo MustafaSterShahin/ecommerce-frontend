@@ -5,7 +5,7 @@ interface RegisterFormData {
   username: string;
   email: string;
   password: string;
-  role: "Seller" | "Customer";
+  role: "Supplier" | "Customer";
 }
 
 const Register = () => {
@@ -87,7 +87,7 @@ const Register = () => {
           className="border p-2 rounded"
         >
           <option value="Customer">Customer</option>
-          <option value="Seller">Seller</option>
+          <option value="Supplier">Supplier</option>
         </select>
         <button type="submit" className="bg-blue-500 text-white p-2 rounded mt-2">
           Register
